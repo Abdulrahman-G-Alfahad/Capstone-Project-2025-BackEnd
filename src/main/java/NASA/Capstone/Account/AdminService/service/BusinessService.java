@@ -16,17 +16,12 @@ public class BusinessService {
 
     private final BusinessRepository businessRepository;
 
-    private final AssociateRepository associateRepository;
 
-    private final TransactionRepository transactionRepository;
 
     private final AuthenticationService authenticationService;
 
-    public BusinessService(BusinessRepository businessRepository, TransactionRepository transactionRepository,
-                           AssociateRepository associateRepository, AuthenticationService authenticationService) {
+    public BusinessService(BusinessRepository businessRepository, AuthenticationService authenticationService) {
         this.businessRepository = businessRepository;
-        this.transactionRepository = transactionRepository;
-        this.associateRepository = associateRepository;
         this.authenticationService = authenticationService;
     }
 

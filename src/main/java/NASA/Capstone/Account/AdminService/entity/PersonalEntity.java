@@ -42,7 +42,11 @@ public class PersonalEntity extends UserEntity{
     @Column(nullable = true)
     private String bankAccountNumber;
 
+    @Enumerated(EnumType.STRING)
     private Roles type;
+
+    @Column(nullable = true)
+    private Double transactionLimit;
 
 
     public String getFullName() {
@@ -97,8 +101,14 @@ public class PersonalEntity extends UserEntity{
         return familyMembers;
     }
 
-    public void setFamilyMembers(List<PersonalEntity> familyMembers) {
-        this.familyMembers = familyMembers;
+    public List<PersonalEntity> addFamilyMember(PersonalEntity familyMember) {
+        familyMembers.add(familyMember);
+        return familyMembers;
+    }
+
+    public List<PersonalEntity> removeFamilyMember(PersonalEntity familyMember) {
+        familyMembers.remove(familyMember);
+        return familyMembers;
     }
 
     public List<TransactionEntity> getTransactionHistory() {
@@ -123,6 +133,14 @@ public class PersonalEntity extends UserEntity{
 
     public void setType(Roles type) {
         this.type = type;
+    }
+
+    public Double getTransactionLimit() {
+        return transactionLimit;
+    }
+
+    public void setTransactionLimit(Double transactionLimit) {
+        this.transactionLimit = transactionLimit;
     }
 
     @Override
