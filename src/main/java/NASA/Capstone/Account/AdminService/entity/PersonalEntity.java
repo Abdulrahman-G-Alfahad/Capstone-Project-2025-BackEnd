@@ -32,10 +32,12 @@ public class PersonalEntity extends UserEntity{
     private String faceID;
 
     @OneToMany
+    @JoinColumn(name = "business_id")
     private List<PersonalEntity> familyMembers = new ArrayList<>();
 
-//    @OneToMany
-//    private List transactionHistory;
+    @OneToMany
+    @JoinColumn(name = "business_id")
+    private List<TransactionEntity> transactionHistory = new ArrayList<>();
 
     @Column(nullable = true)
     private String bankAccountNumber;
@@ -99,13 +101,13 @@ public class PersonalEntity extends UserEntity{
         this.familyMembers = familyMembers;
     }
 
-//    public List getTransactionHistory() {
-//        return transactionHistory;
-//    }
-//
-//    public void setTransactionHistory(List transactionHistory) {
-//        this.transactionHistory = transactionHistory;
-//    }
+    public List<TransactionEntity> getTransactionHistory() {
+        return transactionHistory;
+    }
+
+    public void addTransaction(TransactionEntity transaction) {
+        transactionHistory.add(transaction);
+    }
 
     public String getBankAccountNumber() {
         return bankAccountNumber;

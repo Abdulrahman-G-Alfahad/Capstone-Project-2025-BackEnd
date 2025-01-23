@@ -25,11 +25,12 @@ public class BusinessEntity extends UserEntity{
     private String bankAccountNumber;
 
     @OneToMany
-    @Column(nullable = false)
-    private List<AssociateEntity> Associates = new ArrayList<>();
+    @JoinColumn(name = "business_id")
+    private List<AssociateEntity> associates = new ArrayList<>();
 
-    //@Column(nullable = false)
-    //private List<TransactionEntity> transactions;
+    @OneToMany
+    @JoinColumn(name = "business_id")
+    private List<TransactionEntity> transactions = new ArrayList<>();
 
 
     public String getName() {
@@ -65,11 +66,19 @@ public class BusinessEntity extends UserEntity{
     }
 
     public List<AssociateEntity> getAssociates() {
-        return Associates;
+        return associates;
     }
 
     public void addAssociate(AssociateEntity associate) {
-        Associates.add(associate);
+        associates.add(associate);
+    }
+
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
+    }
+
+    public void addTransaction(TransactionEntity transaction) {
+        transactions.add(transaction);
     }
 
     @Override
