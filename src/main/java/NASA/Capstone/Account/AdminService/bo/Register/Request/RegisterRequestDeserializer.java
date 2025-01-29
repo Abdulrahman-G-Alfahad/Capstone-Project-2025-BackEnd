@@ -22,7 +22,7 @@ public class RegisterRequestDeserializer extends JsonDeserializer<RegisterReques
             return mapper.treeToValue(root, RegisterAssociateRequest.class);
         } else if (root.has("businessId") && root.has("bankAccount")) {
             return mapper.treeToValue(root, RegisterBusinessRequest.class);
-        } else if (root.has("fullName")) {
+        } else if (root.has("fullName") && !root.has("businessId")) {
             return mapper.treeToValue(root, RegisterAdminRequest.class);
         } else {
             throw new IllegalArgumentException("Unknown request type");

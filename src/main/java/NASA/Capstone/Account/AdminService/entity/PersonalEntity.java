@@ -42,8 +42,9 @@ public class PersonalEntity extends UserEntity{
     @Column(nullable = true)
     private String bankAccountNumber;
 
-    @Enumerated(EnumType.STRING)
-    private Roles type;
+
+    @Column(nullable = false)
+    private Boolean privacy = true;
 
     @Column(nullable = true)
     private Double transactionLimit;
@@ -127,12 +128,12 @@ public class PersonalEntity extends UserEntity{
         this.bankAccountNumber = bankAccountNumber;
     }
 
-    public Roles getType() {
-        return type;
+    public Boolean getPrivate() {
+        return privacy;
     }
 
-    public void setType(Roles type) {
-        this.type = type;
+    public void changePrivacy() {
+        privacy = !privacy;
     }
 
     public Double getTransactionLimit() {

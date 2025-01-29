@@ -4,6 +4,7 @@ import NASA.Capstone.Account.AdminService.Enums.Methods;
 import NASA.Capstone.Account.AdminService.Enums.Status;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,7 +18,7 @@ public class TransactionEntity {
     private Double amount;
 
     @Column(nullable = false)
-    private Date dateTime;
+    private LocalDateTime dateTime;
 
     @Column(nullable = false)
     private Status status;
@@ -34,7 +35,7 @@ public class TransactionEntity {
     private Methods method;
 
     @ManyToOne
-    @JoinColumn(name = "associate_id")
+    @JoinColumn(name = "associate_id", nullable = true)
     private AssociateEntity associateId;
 
     public Double getAmount() {
@@ -45,11 +46,11 @@ public class TransactionEntity {
         this.amount = amount;
     }
 
-    public Date getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Date dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

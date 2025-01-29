@@ -49,7 +49,6 @@ public class AuthenticationService {
             user.setCivilId(personalRequest.getCivilId());
             user.setBankAccountNumber(personalRequest.getBankAccount());
             user.setFaceID(personalRequest.getFaceId());
-            user.setType(personalRequest.getType());
             return userRepository.save(user);
 
         } else if (Type.equals("RegisterBusinessRequest")) {
