@@ -1,20 +1,21 @@
 package NASA.Capstone.Account.AdminService.bo;
 
+import NASA.Capstone.Account.AdminService.entity.DependentEntity;
 import NASA.Capstone.Account.AdminService.entity.PersonalEntity;
 
 import java.util.List;
 
 public class FamilyMemberResponse {
 
-    private List<PersonalEntity> familyMembers;
+    private List<DependentEntity> familyMembers;
 
     private String message;
 
-    public List<PersonalEntity> getFamilyMembers() {
+    public List<DependentEntity> getFamilyMembers() {
         return familyMembers;
     }
 
-    public void setFamilyMembers(List<PersonalEntity> familyMembers) {
+    public void setFamilyMembers(List<DependentEntity> familyMembers) {
         this.familyMembers = familyMembers;
     }
 

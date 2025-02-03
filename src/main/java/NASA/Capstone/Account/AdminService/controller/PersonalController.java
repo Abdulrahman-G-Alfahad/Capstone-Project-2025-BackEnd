@@ -1,14 +1,19 @@
 package NASA.Capstone.Account.AdminService.controller;
 
 
+import NASA.Capstone.Account.AdminService.bo.CreateFamilyAccountRequest;
 import NASA.Capstone.Account.AdminService.bo.FamilyMemberResponse;
 import NASA.Capstone.Account.AdminService.bo.GetProfileResponse;
 import NASA.Capstone.Account.AdminService.bo.SetLimitResponse;
+import NASA.Capstone.Account.AdminService.entity.DependentEntity;
+import NASA.Capstone.Account.AdminService.repository.DependentRepository;
 import NASA.Capstone.Account.AdminService.repository.PersonalRepository;
 import NASA.Capstone.Account.AdminService.service.PersonalService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/personal")
 @RestController
@@ -16,10 +21,12 @@ public class PersonalController {
     private final PersonalService personalService;
 
     private final PersonalRepository personalRepository;
+    private final DependentRepository dependentRepository;
 
-    public PersonalController(PersonalService personalService, PersonalRepository personalRepository) {
+    public PersonalController(PersonalService personalService, PersonalRepository personalRepository, DependentRepository dependentRepository) {
         this.personalService = personalService;
         this.personalRepository = personalRepository;
+        this.dependentRepository = dependentRepository;
     }
 
     @GetMapping("/{userId}")
@@ -38,20 +45,18 @@ public class PersonalController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/addFamilyMember/{userId}/{familyMemberId}")
-    public ResponseEntity<FamilyMemberResponse> addFamilyMember(@PathVariable("userId") Long userId, @PathVariable("familyMemberId") Long familyMemberId) {
+    @PostMapping("/addFamilyMember/{userId}")
+    public ResponseEntity<FamilyMemberResponse> addFamilyMember(@PathVariable("userId") Long userId, @RequestBody CreateFamilyAccountRequest request) {
         FamilyMemberResponse response = new FamilyMemberResponse();
-        try{
-            personalRepository.findById(userId).orElseThrow();
-            personalRepository.findById(familyMemberId).orElseThrow();
+        try {
+            DependentEntity dependent = personalService.addFamilyMember(userId, request);
+            response.setFamilyMembers(List.of(dependent));
+            response.setMessage("Family member added successfully");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response.setMessage("User or family member does not exist");
+            response.setMessage("ERROR: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
-        response.setFamilyMembers(personalService.addFamilyMember(userId, familyMemberId));
-        response.setMessage("Family member added successfully");
-        return ResponseEntity.ok(response);
-
     }
 
     @GetMapping("/getFamilyMembers/{userId}")
