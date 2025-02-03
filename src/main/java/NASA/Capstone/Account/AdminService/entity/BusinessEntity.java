@@ -32,6 +32,10 @@ public class BusinessEntity extends UserEntity{
     @JoinColumn(name = "business_id")
     private List<TransactionEntity> transactions = new ArrayList<>();
 
+    @Override
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;

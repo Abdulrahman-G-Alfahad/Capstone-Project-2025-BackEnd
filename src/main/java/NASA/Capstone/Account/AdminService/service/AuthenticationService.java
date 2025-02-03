@@ -20,10 +20,13 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    private final JwtService jwtService;
+
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     public UserEntity Register(RegisterRequest request, String Type){
@@ -101,5 +104,10 @@ public class AuthenticationService {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(input.getUsername(), input.getPassword()));
         return user;
+    }
+
+    public String generateTokenWithAccountType(UserEntity user) {
+        String accountType = user.getClass().getSimpleName();
+        return jwtService.generateToken(user, accountType, user.getId());
     }
 }

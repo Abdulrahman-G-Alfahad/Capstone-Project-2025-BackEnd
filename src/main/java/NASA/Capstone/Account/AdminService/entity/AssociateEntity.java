@@ -15,6 +15,11 @@ public class AssociateEntity extends BusinessEntity{
     @Column(nullable = false)
     private String phoneNumber;
 
+    @Override
+    public Long getId() {
+        return id;
+    }
+
     public String getFullName() {
         return fullName;
     }

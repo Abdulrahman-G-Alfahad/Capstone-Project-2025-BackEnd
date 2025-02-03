@@ -3,6 +3,7 @@ package NASA.Capstone.Account.AdminService.controller;
 
 import NASA.Capstone.Account.AdminService.bo.CreateFamilyAccountRequest;
 import NASA.Capstone.Account.AdminService.bo.FamilyMemberResponse;
+import NASA.Capstone.Account.AdminService.bo.GetProfileResponse;
 import NASA.Capstone.Account.AdminService.bo.SetLimitResponse;
 import NASA.Capstone.Account.AdminService.entity.DependentEntity;
 import NASA.Capstone.Account.AdminService.repository.DependentRepository;
@@ -26,6 +27,22 @@ public class PersonalController {
         this.personalService = personalService;
         this.personalRepository = personalRepository;
         this.dependentRepository = dependentRepository;
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<GetProfileResponse> getProfile(@PathVariable("userId") Long userId) {
+        GetProfileResponse response = new GetProfileResponse();
+        try{
+            System.out.println(personalRepository.findById(userId));
+            personalRepository.findById(userId);
+        } catch (Exception e) {
+            response.setMessage("User does not exist");
+            return ResponseEntity.badRequest().body(response);
+        }
+        response.setUser(personalRepository.findById(userId).get());
+        response.setMessage("User retrieved successfully");
+        System.out.println(response);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/addFamilyMember/{userId}")

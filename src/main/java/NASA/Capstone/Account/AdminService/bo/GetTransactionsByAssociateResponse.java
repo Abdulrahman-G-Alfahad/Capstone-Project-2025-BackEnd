@@ -6,15 +6,15 @@ import java.util.List;
 
 public class GetTransactionsByAssociateResponse {
 
-    private List<TransactionEntity> transactions;
+    private List<TransactionDTO> transactions;
 
     private String message;
 
-    public List<TransactionEntity> getTransactions() {
+    public List<TransactionDTO> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<TransactionEntity> transactions) {
+    public void setTransactions(List<TransactionDTO> transactions) {
         this.transactions = transactions;
     }
 
