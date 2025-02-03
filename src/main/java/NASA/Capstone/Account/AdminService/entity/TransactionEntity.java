@@ -3,6 +3,7 @@ package NASA.Capstone.Account.AdminService.entity;
 import NASA.Capstone.Account.AdminService.Enums.Methods;
 import NASA.Capstone.Account.AdminService.Enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -26,12 +27,12 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"transactionHistory", "transactions", "familyMembers"})
     private UserEntity sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id")
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"transactionHistory", "transactions", "familyMembers"})
     private UserEntity receiver;
 
     @Column(nullable = false)
@@ -40,7 +41,7 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "associate_id", nullable = true)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"transactions", "associates"})
     private AssociateEntity associateId;
 
     public Long getId() {
