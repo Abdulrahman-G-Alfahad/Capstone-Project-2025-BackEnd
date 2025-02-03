@@ -49,6 +49,11 @@ public class AuthenticationService {
             user.setCivilId(personalRequest.getCivilId());
             user.setBankAccountNumber(personalRequest.getBankAccount());
             user.setFaceID(personalRequest.getFaceId());
+            if (personalRequest.getPin().length() != 4 || !personalRequest.getPin().matches("\\d{4}")) {
+                throw new IllegalArgumentException("PIN must be exactly 4 digits.");
+            }
+            user.setPin(passwordEncoder.encode(personalRequest.getPin()));
+            //System.out.println("Received PIN: " + personalRequest.getPin());
             return userRepository.save(user);
 
         } else if (Type.equals("RegisterBusinessRequest")) {

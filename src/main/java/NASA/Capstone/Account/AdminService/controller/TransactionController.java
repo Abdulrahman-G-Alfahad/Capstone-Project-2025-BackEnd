@@ -50,11 +50,11 @@ public class TransactionController {
             TransactionEntity transaction = transactionService.makeBusinessTransaction(request);
             response.setTransaction(transaction);
             response.setMessage("Transaction successful");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
         }
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/transfer")
