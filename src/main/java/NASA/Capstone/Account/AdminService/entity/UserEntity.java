@@ -25,6 +25,10 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String getUsername() {
         return username;

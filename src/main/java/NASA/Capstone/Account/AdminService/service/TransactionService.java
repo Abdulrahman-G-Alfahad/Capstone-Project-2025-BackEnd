@@ -4,9 +4,8 @@ import NASA.Capstone.Account.AdminService.Enums.Methods;
 import NASA.Capstone.Account.AdminService.Enums.Status;
 import NASA.Capstone.Account.AdminService.bo.MakeBusinessTransactionRequest;
 import NASA.Capstone.Account.AdminService.bo.MakeTransferRequest;
-import NASA.Capstone.Account.AdminService.entity.AssociateEntity;
-import NASA.Capstone.Account.AdminService.entity.TransactionEntity;
-import NASA.Capstone.Account.AdminService.entity.UserEntity;
+import NASA.Capstone.Account.AdminService.bo.TransactionDTO;
+import NASA.Capstone.Account.AdminService.entity.*;
 import NASA.Capstone.Account.AdminService.repository.TransactionRepository;
 import NASA.Capstone.Account.AdminService.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,24 @@ public class TransactionService {
         this.userRepository = userRepository;
     }
 
+    public TransactionDTO fillTransactionDto(TransactionEntity transaction){
+        TransactionDTO transactionDTO = new TransactionDTO();
+        transactionDTO.setAmount(transaction.getAmount());
+        transactionDTO.setTransactionDate(transaction.getDateTime().toString());
+        transactionDTO.setMethod(transaction.getMethod());
+        transactionDTO.setReceiverId(transaction.getReceiver().getId());
+        transactionDTO.setSenderId(transaction.getSender().getId());
+        transactionDTO.setStatus(transaction.getStatus());
+        transactionDTO.setTransactionId(transaction.getId());
+        if (transaction.getAssociateId() == null){
+            transactionDTO.setAssociateId(0L);
+        }
+        else {
+            transactionDTO.setAssociateId(transaction.getAssociateId().getId());
+        }
+        return transactionDTO;
+    }
+
     public TransactionEntity makeBusinessTransaction(MakeBusinessTransactionRequest request){
         LocalDateTime datetime = LocalDateTime.now();
         TransactionEntity transaction = new TransactionEntity();
@@ -39,7 +56,17 @@ public class TransactionService {
         transaction.setMethod(request.getMethod());
         transaction.setStatus(Status.PENDING);
         transaction.setDateTime(datetime);
-        return transactionRepository.save(transaction);
+        transaction = transactionRepository.save(transaction);
+        AssociateEntity associateEntity = (AssociateEntity) associate;
+        PersonalEntity senderEntity = (PersonalEntity) sender;
+        BusinessEntity receiverEntity = (BusinessEntity) receiver;
+        associateEntity.addTransaction(transaction);
+        senderEntity.addTransaction(transaction);
+        receiverEntity.addTransaction(transaction);
+        userRepository.save(associateEntity);
+        userRepository.save(senderEntity);
+        userRepository.save(receiverEntity);
+        return transaction;
     }
 
     public TransactionEntity getTransactionById(Long transactionId) {
@@ -61,7 +88,14 @@ public class TransactionService {
         transaction.setMethod(request.getMethod());
         transaction.setStatus(Status.PENDING);
         transaction.setDateTime(dateTime);
-        return transactionRepository.save(transaction);
+        transaction = transactionRepository.save(transaction);
+        PersonalEntity senderEntity = (PersonalEntity) sender;
+        PersonalEntity receiverEntity = (PersonalEntity) receiver;
+        senderEntity.addTransaction(transaction);
+        receiverEntity.addTransaction(transaction);
+        userRepository.save(senderEntity);
+        userRepository.save(receiverEntity);
+        return transaction;
     }
 
     public List<TransactionEntity> getTransactionsBySender(Long senderId) {
