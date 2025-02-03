@@ -1,6 +1,8 @@
 package NASA.Capstone.Account.AdminService.bo.Register.Request;
 
 import NASA.Capstone.Account.AdminService.Enums.Roles;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class RegisterPersonalRequest extends RegisterRequest{
 
@@ -14,6 +16,10 @@ public class RegisterPersonalRequest extends RegisterRequest{
     private String faceId;
     private String username;
     private Roles type;
+
+//    @Size(min = 4, max = 4, message = "PIN must be exactly 4 digits.")
+//    @Pattern(regexp = "\\d{4}", message = "PIN must be numeric")
+    private String pin;
 
     public String getCivilId() {
         return civilId;
@@ -93,5 +99,13 @@ public class RegisterPersonalRequest extends RegisterRequest{
 
     public void setType(Roles type) {
         this.type = type;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 }

@@ -1,7 +1,11 @@
 package NASA.Capstone.Account.AdminService.service;
 
+import NASA.Capstone.Account.AdminService.bo.CreateFamilyAccountRequest;
+import NASA.Capstone.Account.AdminService.entity.DependentEntity;
 import NASA.Capstone.Account.AdminService.entity.PersonalEntity;
+import NASA.Capstone.Account.AdminService.repository.DependentRepository;
 import NASA.Capstone.Account.AdminService.repository.PersonalRepository;
+import NASA.Capstone.Account.AdminService.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,26 +14,40 @@ import java.util.List;
 public class PersonalService {
 
     private final PersonalRepository personalRepository;
+    private final DependentRepository dependentRepository;
+    private final UserRepository userRepository;
 
-    public PersonalService(PersonalRepository personalRepository) {
+    public PersonalService(PersonalRepository personalRepository, DependentRepository dependentRepository, UserRepository userRepository) {
         this.personalRepository = personalRepository;
+        this.dependentRepository = dependentRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<PersonalEntity> addFamilyMember(Long userId, Long familyMemberId) {
+    public DependentEntity addFamilyMember(Long userId, CreateFamilyAccountRequest request) {
+        PersonalEntity user = personalRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found."));
+        DependentEntity dependent = new DependentEntity();
+        dependent.setFullName(request.getFullName());
+        dependent.setFaceId(request.getFaceId());
+        dependent.setWalletBalance(0.0);
+        dependent.setGuardian(user);
+        dependent.setTransactions(request.getTransactions());
+
+        DependentEntity savedDependent = dependentRepository.save(dependent);
+
+        user.addFamilyMember(savedDependent);
+        personalRepository.save(user);
+
+        return savedDependent;
+    }
+
+    public List<DependentEntity> getFamilyMembers(Long userId) {
         PersonalEntity user = personalRepository.findById(userId).orElseThrow();
-        user.addFamilyMember(personalRepository.findById(familyMemberId).orElseThrow());
-        user = personalRepository.save(user);
         return user.getFamilyMembers();
     }
 
-    public List<PersonalEntity> getFamilyMembers(Long userId) {
+    public List<DependentEntity> removeFamilyMember(Long userId, Long familyMemberId) {
         PersonalEntity user = personalRepository.findById(userId).orElseThrow();
-        return user.getFamilyMembers();
-    }
-
-    public List<PersonalEntity> removeFamilyMember(Long userId, Long familyMemberId) {
-        PersonalEntity user = personalRepository.findById(userId).orElseThrow();
-        user.removeFamilyMember(personalRepository.findById(familyMemberId).orElseThrow());
+        user.removeFamilyMember(dependentRepository.findById(familyMemberId).orElseThrow());
         user = personalRepository.save(user);
         return user.getFamilyMembers();
     }

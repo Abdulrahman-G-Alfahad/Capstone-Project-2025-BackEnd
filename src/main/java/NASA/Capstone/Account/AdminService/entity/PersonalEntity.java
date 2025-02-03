@@ -3,6 +3,7 @@ package NASA.Capstone.Account.AdminService.entity;
 import NASA.Capstone.Account.AdminService.Enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class PersonalEntity extends UserEntity{
     private String phoneNumber;
 
     @Column(unique = true, nullable = false)
+    @Size(min = 12, max = 12, message = "Civil ID Must be exactly 12 digits.")
     private String civilId;
 
     @Column(nullable = false)
@@ -35,7 +37,7 @@ public class PersonalEntity extends UserEntity{
     @OneToMany
     @JoinColumn(name = "member_id")
     @JsonIgnore
-    private List<PersonalEntity> familyMembers = new ArrayList<>();
+    private List<DependentEntity> familyMembers = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "personal_id")
@@ -51,6 +53,9 @@ public class PersonalEntity extends UserEntity{
 
     @Column(nullable = true)
     private Double transactionLimit;
+
+    @Column(nullable = false)
+    private String pin;
 
     @Override
     public Long getId() {
@@ -105,18 +110,18 @@ public class PersonalEntity extends UserEntity{
         this.faceID = faceID;
     }
 
-    public List<PersonalEntity> getFamilyMembers() {
+    public List<DependentEntity> getFamilyMembers() {
         return familyMembers;
     }
 
-    public List<PersonalEntity> addFamilyMember(PersonalEntity familyMember) {
+    public void addFamilyMember(DependentEntity familyMember) {
         familyMembers.add(familyMember);
-        return familyMembers;
+//        return familyMembers;
     }
 
-    public List<PersonalEntity> removeFamilyMember(PersonalEntity familyMember) {
+    public void removeFamilyMember(DependentEntity familyMember) {
         familyMembers.remove(familyMember);
-        return familyMembers;
+//        return familyMembers;
     }
 
     public List<TransactionEntity> getTransactionHistory() {
@@ -154,6 +159,13 @@ public class PersonalEntity extends UserEntity{
     @Override
     public String getRole() {
         return "Personal";
+    }
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 
     @Override
