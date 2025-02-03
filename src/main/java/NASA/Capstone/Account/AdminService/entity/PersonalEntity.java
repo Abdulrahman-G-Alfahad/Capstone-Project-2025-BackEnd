@@ -2,6 +2,7 @@ package NASA.Capstone.Account.AdminService.entity;
 
 import NASA.Capstone.Account.AdminService.Enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -34,12 +35,12 @@ public class PersonalEntity extends UserEntity{
 
     @OneToMany
     @JoinColumn(name = "member_id")
-    @JsonIgnore
+    @JsonIgnoreProperties("familyMembers")
     private List<PersonalEntity> familyMembers = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "personal_id")
-    @JsonIgnore
+    @JsonIgnoreProperties("dateTime")
     private List<TransactionEntity> transactionHistory = new ArrayList<>();
 
     @Column(nullable = true)
