@@ -16,18 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
-    private final JwtService jwtService;
     private final AuthenticationService authenticationService;
 
     public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
 
     @PostMapping("/signup")
     public ResponseEntity<RegisterResponse> signup(@RequestBody RegisterRequest request) {
         UserEntity registeredUser = authenticationService.Register(request, request.getClass().getSimpleName());
-        String jwtToken = jwtService.generateToken(registeredUser);
+        String jwtToken = authenticationService.generateTokenWithAccountType(registeredUser);
 
         RegisterResponse registerResponse = new RegisterResponse();
         registerResponse.setToken(jwtToken);
@@ -41,7 +39,7 @@ public class AuthenticationController {
 
         try {
             UserEntity user = authenticationService.authenticate(request);
-            String jwtToken = jwtService.generateToken(user);
+            String jwtToken = authenticationService.generateTokenWithAccountType(user);
 
             loginResponse.setToken(jwtToken);
         } catch (Exception e) {

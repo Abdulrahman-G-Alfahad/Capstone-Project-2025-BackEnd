@@ -1,6 +1,7 @@
 package NASA.Capstone.Account.AdminService.entity;
 
 import NASA.Capstone.Account.AdminService.Enums.Roles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -32,11 +33,13 @@ public class PersonalEntity extends UserEntity{
     private String faceID;
 
     @OneToMany
-    @JoinColumn(name = "business_id")
+    @JoinColumn(name = "member_id")
+    @JsonIgnore
     private List<PersonalEntity> familyMembers = new ArrayList<>();
 
     @OneToMany
-    @JoinColumn(name = "business_id")
+    @JoinColumn(name = "personal_id")
+    @JsonIgnore
     private List<TransactionEntity> transactionHistory = new ArrayList<>();
 
     @Column(nullable = true)
@@ -49,6 +52,10 @@ public class PersonalEntity extends UserEntity{
     @Column(nullable = true)
     private Double transactionLimit;
 
+    @Override
+    public Long getId() {
+        return id;
+    }
 
     public String getFullName() {
         return fullName;
@@ -147,5 +154,21 @@ public class PersonalEntity extends UserEntity{
     @Override
     public String getRole() {
         return "Personal";
+    }
+
+    @Override
+    public String toString() {
+        return "PersonalEntity{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", civilId='" + civilId + '\'' +
+                ", walletBalance=" + walletBalance +
+                ", faceID='" + faceID + '\'' +
+                ", bankAccountNumber='" + bankAccountNumber + '\'' +
+                ", privacy=" + privacy +
+                ", transactionLimit=" + transactionLimit +
+                '}';
     }
 }

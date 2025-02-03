@@ -2,6 +2,7 @@ package NASA.Capstone.Account.AdminService.entity;
 
 import NASA.Capstone.Account.AdminService.Enums.Methods;
 import NASA.Capstone.Account.AdminService.Enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -25,18 +26,26 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
+    @JsonIgnore
     private UserEntity sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id")
+    @JsonIgnore
     private UserEntity receiver;
 
     @Column(nullable = false)
+    @JsonIgnore
     private Methods method;
 
     @ManyToOne
     @JoinColumn(name = "associate_id", nullable = true)
+    @JsonIgnore
     private AssociateEntity associateId;
+
+    public Long getId() {
+        return id;
+    }
 
     public Double getAmount() {
         return amount;
@@ -92,5 +101,16 @@ public class TransactionEntity {
 
     public void setAssociateId(AssociateEntity associateId) {
         this.associateId = associateId;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionEntity{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", dateTime=" + dateTime +
+                ", status=" + status +
+                ", method=" + method +
+                '}';
     }
 }

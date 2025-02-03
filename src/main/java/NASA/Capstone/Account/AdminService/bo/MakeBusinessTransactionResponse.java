@@ -4,15 +4,15 @@ import NASA.Capstone.Account.AdminService.entity.TransactionEntity;
 
 public class MakeBusinessTransactionResponse {
 
-    private TransactionEntity transaction;
+    private TransactionDTO transaction;
 
     private String message;
 
-    public TransactionEntity getTransaction() {
+    public TransactionDTO getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(TransactionEntity transaction) {
+    public void setTransaction(TransactionDTO transaction) {
         this.transaction = transaction;
     }
 

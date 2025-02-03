@@ -1,20 +1,18 @@
-package NASA.Capstone.Account.AdminService;
-
-import NASA.Capstone.Account.AdminService.entity.TransactionEntity;
+package NASA.Capstone.Account.AdminService.bo;
 
 import java.util.List;
 
 public class GetTransactionsByReceiverResponse {
 
-    private List<TransactionEntity> transactions;
+    private List<TransactionDTO> transactions;
 
     private String message;
 
-    public List<TransactionEntity> getTransactions() {
+    public List<TransactionDTO> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<TransactionEntity> transactions) {
+    public void setTransactions(List<TransactionDTO> transactions) {
         this.transactions = transactions;
     }
 

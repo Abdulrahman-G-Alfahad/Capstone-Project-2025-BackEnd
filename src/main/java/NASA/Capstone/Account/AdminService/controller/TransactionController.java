@@ -1,12 +1,16 @@
 package NASA.Capstone.Account.AdminService.controller;
 
 import NASA.Capstone.Account.AdminService.Enums.Status;
-import NASA.Capstone.Account.AdminService.GetTransactionsByReceiverResponse;
+import NASA.Capstone.Account.AdminService.bo.GetTransactionsByReceiverResponse;
 import NASA.Capstone.Account.AdminService.bo.*;
 import NASA.Capstone.Account.AdminService.entity.TransactionEntity;
 import NASA.Capstone.Account.AdminService.service.TransactionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequestMapping("/transaction")
 @RestController
@@ -23,11 +27,13 @@ public class TransactionController {
     public ResponseEntity<GetTransactionByIdResponse> getTransactionById(@PathVariable("transactionId") Long transactionId){
         GetTransactionByIdResponse response = new GetTransactionByIdResponse();
         try{
-            response.setTransaction(transactionService.getTransactionById(transactionId));
+            TransactionDTO dto = transactionService.fillTransactionDto(transactionService.getTransactionById(transactionId));
+            response.setTransaction(dto);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
         }
+        System.out.println(response);
         return ResponseEntity.ok(response);
     }
 
@@ -35,7 +41,11 @@ public class TransactionController {
     public ResponseEntity<GetAllTransactionResponse> getAllTransactions(){
         GetAllTransactionResponse response = new GetAllTransactionResponse();
         try{
-            response.setTransactions(transactionService.getAllTransactions());
+            List<TransactionDTO> transactions = new ArrayList<>();
+            for (TransactionEntity transaction : transactionService.getAllTransactions()){
+                transactions.add(transactionService.fillTransactionDto(transaction));
+            }
+            response.setTransactions(transactions);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
@@ -48,13 +58,16 @@ public class TransactionController {
         MakeBusinessTransactionResponse response = new MakeBusinessTransactionResponse();
         try{
             TransactionEntity transaction = transactionService.makeBusinessTransaction(request);
-            response.setTransaction(transaction);
+            TransactionDTO dto = transactionService.fillTransactionDto(transaction);
+            System.out.println(dto);
+            response.setTransaction(dto);
             response.setMessage("Transaction successful");
+            System.out.println(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
         }
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/transfer")
@@ -62,7 +75,8 @@ public class TransactionController {
         MakeTransferResponse response = new MakeTransferResponse();
         try{
             TransactionEntity transaction = transactionService.makeTransfer(request);
-            response.setTransaction(transaction);
+            TransactionDTO dto = transactionService.fillTransactionDto(transaction);
+            response.setTransaction(dto);
             response.setMessage("Transfer successful");
         } catch (Exception e) {
             response.setMessage(e.getMessage());
@@ -75,7 +89,11 @@ public class TransactionController {
     public ResponseEntity<GetTransactionsBySenderResponse> getTransactionsBySender(@PathVariable("senderId") Long senderId){
         GetTransactionsBySenderResponse response = new GetTransactionsBySenderResponse();
         try{
-            response.setTransactions(transactionService.getTransactionsBySender(senderId));
+            List<TransactionDTO> transactions = new ArrayList<>();
+            for (TransactionEntity transaction : transactionService.getTransactionsBySender(senderId)){
+                transactions.add(transactionService.fillTransactionDto(transaction));
+            }
+            response.setTransactions(transactions);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
@@ -87,7 +105,11 @@ public class TransactionController {
     public ResponseEntity<GetTransactionsByReceiverResponse> getTransactionsByReceiver(@PathVariable("receiverId") Long receiverId){
         GetTransactionsByReceiverResponse response = new GetTransactionsByReceiverResponse();
         try{
-            response.setTransactions(transactionService.getTransactionsByReceiver(receiverId));
+            List<TransactionDTO> transactions = new ArrayList<>();
+            for (TransactionEntity transaction : transactionService.getTransactionsByReceiver(receiverId)){
+                transactions.add(transactionService.fillTransactionDto(transaction));
+            }
+            response.setTransactions(transactions);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
@@ -99,7 +121,11 @@ public class TransactionController {
     public ResponseEntity<GetTransactionsByDateTimeBetweenResponse> getTransactionsByDateTimeBetween(@RequestBody GetTransactionsByDateTimeBetweenRequest request){
         GetTransactionsByDateTimeBetweenResponse response = new GetTransactionsByDateTimeBetweenResponse();
         try{
-            response.setTransactions(transactionService.getTransactionsByDateTimeBetween(request.getStart(), request.getEnd()));
+            List<TransactionDTO> transactions = new ArrayList<>();
+            for (TransactionEntity transaction : transactionService.getTransactionsByDateTimeBetween(request.getStart(),request.getEnd())){
+                transactions.add(transactionService.fillTransactionDto(transaction));
+            }
+            response.setTransactions(transactions);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
@@ -111,7 +137,11 @@ public class TransactionController {
     public ResponseEntity<GetTransactionsByAssociateResponse> getTransactionsByAssociate(@PathVariable("associateId") Long associateId){
         GetTransactionsByAssociateResponse response = new GetTransactionsByAssociateResponse();
         try{
-            response.setTransactions(transactionService.getTransactionsByAssociate(associateId));
+            List<TransactionDTO> transactions = new ArrayList<>();
+            for (TransactionEntity transaction : transactionService.getTransactionsByAssociate(associateId)){
+                transactions.add(transactionService.fillTransactionDto(transaction));
+            }
+            response.setTransactions(transactions);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
@@ -123,7 +153,11 @@ public class TransactionController {
     public ResponseEntity<GetTransactionsByStatusResponse> getTransactionsByStatus(@PathVariable("status") String status){
         GetTransactionsByStatusResponse response = new GetTransactionsByStatusResponse();
         try{
-            response.setTransactions(transactionService.getTransactionsByStatus(Status.valueOf(status)));
+            List<TransactionDTO> transactions = new ArrayList<>();
+            for (TransactionEntity transaction : transactionService.getTransactionsByStatus(Status.valueOf(status))){
+                transactions.add(transactionService.fillTransactionDto(transaction));
+            }
+            response.setTransactions(transactions);
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
@@ -135,7 +169,7 @@ public class TransactionController {
     public ResponseEntity<ChangeTransactionStatusResponse> approveTransaction(@PathVariable("transactionId") Long transactionId){
         ChangeTransactionStatusResponse response = new ChangeTransactionStatusResponse();
         try{
-            response.setTransaction(transactionService.updateTransactionStatus(transactionId,Status.APPROVED));
+            response.setTransaction(transactionService.fillTransactionDto(transactionService.updateTransactionStatus(transactionId,Status.APPROVED)));
             response.setMessage("Transaction approved");
         } catch (Exception e) {
             response.setMessage(e.getMessage());
@@ -148,7 +182,7 @@ public class TransactionController {
     public ResponseEntity<ChangeTransactionStatusResponse> rejectTransaction(@PathVariable("transactionId") Long transactionId){
         ChangeTransactionStatusResponse response = new ChangeTransactionStatusResponse();
         try{
-            response.setTransaction(transactionService.updateTransactionStatus(transactionId,Status.REJECTED));
+            response.setTransaction(transactionService.fillTransactionDto(transactionService.updateTransactionStatus(transactionId,Status.REJECTED)));
             response.setMessage("Transaction rejected");
         } catch (Exception e) {
             response.setMessage(e.getMessage());
