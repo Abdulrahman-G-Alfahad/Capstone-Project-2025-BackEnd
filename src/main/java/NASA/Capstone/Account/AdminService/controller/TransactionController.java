@@ -117,21 +117,21 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/datetime")
-    public ResponseEntity<GetTransactionsByDateTimeBetweenResponse> getTransactionsByDateTimeBetween(@RequestBody GetTransactionsByDateTimeBetweenRequest request){
-        GetTransactionsByDateTimeBetweenResponse response = new GetTransactionsByDateTimeBetweenResponse();
-        try{
-            List<TransactionDTO> transactions = new ArrayList<>();
-            for (TransactionEntity transaction : transactionService.getTransactionsByDateTimeBetween(request.getStart(),request.getEnd())){
-                transactions.add(transactionService.fillTransactionDto(transaction));
-            }
-            response.setTransactions(transactions);
-        } catch (Exception e) {
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(404).body(response);
-        }
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/datetime")
+//    public ResponseEntity<GetTransactionsByDateTimeBetweenResponse> getTransactionsByDateTimeBetween(@RequestBody GetTransactionsByDateTimeBetweenRequest request){
+//        GetTransactionsByDateTimeBetweenResponse response = new GetTransactionsByDateTimeBetweenResponse();
+//        try{
+//            List<TransactionDTO> transactions = new ArrayList<>();
+//            for (TransactionEntity transaction : transactionService.getTransactionsByDateTimeBetween(request.getStart(),request.getEnd())){
+//                transactions.add(transactionService.fillTransactionDto(transaction));
+//            }
+//            response.setTransactions(transactions);
+//        } catch (Exception e) {
+//            response.setMessage(e.getMessage());
+//            return ResponseEntity.status(404).body(response);
+//        }
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping("/associate/{associateId}")
     public ResponseEntity<GetTransactionsByAssociateResponse> getTransactionsByAssociate(@PathVariable("associateId") Long associateId){

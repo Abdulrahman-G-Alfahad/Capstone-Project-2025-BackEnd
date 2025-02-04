@@ -3,8 +3,6 @@ package NASA.Capstone.Account.AdminService.bo;
 import NASA.Capstone.Account.AdminService.Enums.Methods;
 import NASA.Capstone.Account.AdminService.Enums.Status;
 
-import java.time.LocalDateTime;
-
 public class TransactionDTO {
 
     private Long transactionId;
