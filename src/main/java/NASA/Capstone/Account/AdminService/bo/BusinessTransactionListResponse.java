@@ -6,15 +6,15 @@ import java.util.List;
 
 public class BusinessTransactionListResponse {
 
-    private List<TransactionEntity> transactionList;
+    private List<TransactionDTO> transactionList;
 
     private String message;
 
-    public List<TransactionEntity> getTransactionList() {
+    public List<TransactionDTO> getTransactionList() {
         return transactionList;
     }
 
-    public void setTransactionList(List<TransactionEntity> transactionList) {
+    public void setTransactionList(List<TransactionDTO> transactionList) {
         this.transactionList = transactionList;
     }
 
