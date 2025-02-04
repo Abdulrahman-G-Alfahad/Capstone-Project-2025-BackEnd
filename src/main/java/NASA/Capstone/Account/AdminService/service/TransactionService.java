@@ -55,7 +55,7 @@ public class TransactionService {
         transaction.setReceiver(receiver);
         transaction.setMethod(request.getMethod());
         transaction.setStatus(Status.PENDING);
-        transaction.setDateTime(datetime);
+        transaction.setDateTime(datetime.toString());
         transaction = transactionRepository.save(transaction);
         AssociateEntity associateEntity = (AssociateEntity) associate;
         PersonalEntity senderEntity = (PersonalEntity) sender;
@@ -87,7 +87,7 @@ public class TransactionService {
         transaction.setReceiver(receiver);
         transaction.setMethod(request.getMethod());
         transaction.setStatus(Status.PENDING);
-        transaction.setDateTime(dateTime);
+        transaction.setDateTime(dateTime.toString());
         transaction = transactionRepository.save(transaction);
         PersonalEntity senderEntity = (PersonalEntity) sender;
         PersonalEntity receiverEntity = (PersonalEntity) receiver;
@@ -108,9 +108,9 @@ public class TransactionService {
         return transactionRepository.findByReceiver(receiver);
     }
 
-    public List<TransactionEntity> getTransactionsByDateTimeBetween(LocalDateTime start, LocalDateTime end) {
-        return transactionRepository.findByDateTimeBetween(start, end);
-    }
+//    public List<TransactionEntity> getTransactionsByDateTimeBetween(LocalDateTime start, LocalDateTime end) {
+//        return transactionRepository.findByDateTimeBetween(start.toString(), end.toString());
+//    }
 
     public List<TransactionEntity> getTransactionsByAssociate(Long associateId) {
         UserEntity associate = userRepository.findById(associateId).orElseThrow();

@@ -20,7 +20,7 @@ public class TransactionEntity {
     private Double amount;
 
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private String dateTime;
 
     @Column(nullable = false)
     private Status status;
@@ -56,11 +56,11 @@ public class TransactionEntity {
         this.amount = amount;
     }
 
-    public LocalDateTime getDateTime() {
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 

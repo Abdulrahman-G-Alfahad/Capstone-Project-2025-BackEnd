@@ -42,7 +42,7 @@ public class PersonalEntity extends UserEntity{
 
     @OneToMany
     @JoinColumn(name = "personal_id")
-    @JsonIgnoreProperties("dateTime")
+    //@JsonIgnoreProperties("dateTime")
     private List<TransactionEntity> transactionHistory = new ArrayList<>();
 
     @Column(nullable = true)

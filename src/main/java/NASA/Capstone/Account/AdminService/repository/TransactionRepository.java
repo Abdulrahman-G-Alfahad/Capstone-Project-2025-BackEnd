@@ -15,12 +15,12 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
 
-    TransactionEntity findByDateTime(LocalDateTime dateTime);
+    //TransactionEntity findByDateTime(LocalDateTime dateTime);
     List<TransactionEntity> findByStatus(Status status);
     List<TransactionEntity> findByMethod(Methods method);
     List<TransactionEntity> findBySender(UserEntity sender);
     List<TransactionEntity> findByReceiver(UserEntity receiver);
     List<TransactionEntity> findByAssociateId(AssociateEntity associate);
-    List<TransactionEntity> findByDateTimeBetween(LocalDateTime start, LocalDateTime end);
+    //List<TransactionEntity> findByDateTimeBetween(String start, String end);
 
 }
