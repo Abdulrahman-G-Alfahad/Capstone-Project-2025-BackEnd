@@ -4,20 +4,28 @@ import NASA.Capstone.Account.AdminService.bo.BusinessAssociateListResponse;
 import NASA.Capstone.Account.AdminService.bo.BusinessProfileResponse;
 import NASA.Capstone.Account.AdminService.bo.BusinessTransactionListResponse;
 import NASA.Capstone.Account.AdminService.bo.Register.Request.RegisterAssociateRequest;
+import NASA.Capstone.Account.AdminService.bo.TransactionDTO;
+import NASA.Capstone.Account.AdminService.entity.TransactionEntity;
 import NASA.Capstone.Account.AdminService.repository.BusinessRepository;
 import NASA.Capstone.Account.AdminService.service.BusinessService;
+import NASA.Capstone.Account.AdminService.service.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequestMapping("/business")
 @RestController
 public class BusinessController {
     private final BusinessService businessService;
     private final BusinessRepository businessRepository;
+    private final TransactionService transactionService;
 
-    public BusinessController(BusinessService businessService, BusinessRepository businessRepository) {
+    public BusinessController(BusinessService businessService, BusinessRepository businessRepository, TransactionService transactionService) {
         this.businessService = businessService;
         this.businessRepository = businessRepository;
+        this.transactionService = transactionService;
     }
 
     @GetMapping("/profile/{businessId}")
@@ -44,7 +52,11 @@ public class BusinessController {
             return ResponseEntity.status(404).body(response);
         }
         BusinessTransactionListResponse response = new BusinessTransactionListResponse();
-        response.setTransactionList(businessService.getTransactions(businessId));
+        List<TransactionDTO> transactions = new ArrayList<>();
+        for (TransactionEntity transaction : businessService.getTransactions(businessId)) {
+            transactions.add(transactionService.fillTransactionDto(transaction));
+        }
+        response.setTransactionList(transactions);
         return ResponseEntity.ok(response);
     }
 
