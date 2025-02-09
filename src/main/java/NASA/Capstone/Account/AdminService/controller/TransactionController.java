@@ -191,5 +191,19 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/deposit/{userId}")
+    public ResponseEntity<GetTransactionByIdResponse> makeDeposit(@PathVariable("userId") Long userId, @RequestBody MakeDepositRequest request){
+        GetTransactionByIdResponse response = new GetTransactionByIdResponse();
+        try{
+            TransactionEntity deposit = transactionService.addDeposit(request, userId);
+            response.setTransaction(transactionService.fillTransactionDto(deposit));
+            response.setMessage("Deposit successful");
+        } catch (Exception e) {
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(404).body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
+
 
 }

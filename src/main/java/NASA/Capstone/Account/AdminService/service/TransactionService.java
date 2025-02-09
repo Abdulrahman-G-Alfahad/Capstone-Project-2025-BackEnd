@@ -3,6 +3,7 @@ package NASA.Capstone.Account.AdminService.service;
 import NASA.Capstone.Account.AdminService.Enums.Methods;
 import NASA.Capstone.Account.AdminService.Enums.Status;
 import NASA.Capstone.Account.AdminService.bo.MakeBusinessTransactionRequest;
+import NASA.Capstone.Account.AdminService.bo.MakeDepositRequest;
 import NASA.Capstone.Account.AdminService.bo.MakeTransferRequest;
 import NASA.Capstone.Account.AdminService.bo.TransactionDTO;
 import NASA.Capstone.Account.AdminService.entity.*;
@@ -129,5 +130,23 @@ public class TransactionService {
         TransactionEntity transaction = transactionRepository.findById(transactionId).orElseThrow();
         transaction.setStatus(status);
         return transactionRepository.save(transaction);
+    }
+
+    public TransactionEntity addDeposit(MakeDepositRequest request, Long userId) {
+        TransactionEntity deposit = new TransactionEntity();
+        LocalDateTime dateTime = LocalDateTime.now();
+        UserEntity user = userRepository.findById(userId).orElseThrow();
+        deposit.setAmount(request.getAmount());
+        deposit.setDateTime(dateTime.toString());
+        deposit.setMethod(Methods.DEPOSIT);
+        deposit.setReceiver(user);
+        deposit.setSender(user);
+        deposit.setStatus(Status.PENDING);
+        deposit = transactionRepository.save(deposit);
+        PersonalEntity personalEntity = (PersonalEntity) user;
+        personalEntity.addTransaction(deposit);
+        personalEntity.setWalletBalance(personalEntity.getWalletBalance() + request.getAmount());
+        userRepository.save(personalEntity);
+        return deposit;
     }
 }
