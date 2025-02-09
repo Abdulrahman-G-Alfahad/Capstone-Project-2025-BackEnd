@@ -1,17 +1,18 @@
 package NASA.Capstone.Account.AdminService.bo;
 
+import NASA.Capstone.Account.AdminService.entity.DependentEntity;
 import NASA.Capstone.Account.AdminService.entity.PersonalEntity;
 
 public class SetLimitResponse {
 
-    private PersonalEntity familyMember;
+    private DependentEntity familyMember;
     private String message;
 
-    public PersonalEntity getFamilyMember() {
+    public DependentEntity getFamilyMember() {
         return familyMember;
     }
 
-    public void setFamilyMember(PersonalEntity familyMember) {
+    public void setFamilyMember(DependentEntity familyMember) {
         this.familyMember = familyMember;
     }
 

@@ -8,6 +8,7 @@ import NASA.Capstone.Account.AdminService.repository.PersonalRepository;
 import NASA.Capstone.Account.AdminService.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class PersonalService {
         dependent.setFaceId(request.getFaceId());
         dependent.setWalletBalance(0.0);
         dependent.setGuardian(user);
-        dependent.setTransactions(request.getTransactions());
+        dependent.setTransactions(new ArrayList<>());
 
         DependentEntity savedDependent = dependentRepository.save(dependent);
 
@@ -47,17 +48,19 @@ public class PersonalService {
 
     public List<DependentEntity> removeFamilyMember(Long userId, Long familyMemberId) {
         PersonalEntity user = personalRepository.findById(userId).orElseThrow();
-        user.removeFamilyMember(dependentRepository.findById(familyMemberId).orElseThrow());
+        DependentEntity member = dependentRepository.findById(familyMemberId).orElseThrow();
+        user.removeFamilyMember(member);
+        dependentRepository.delete(member);
         user = personalRepository.save(user);
         return user.getFamilyMembers();
     }
 
-    public PersonalEntity setLimit(Long userId, Long memberId, Double limit) {
+    public DependentEntity setLimit(Long userId, Long memberId, Double limit) {
         PersonalEntity user = personalRepository.findById(userId).orElseThrow();
-        PersonalEntity member = personalRepository.findById(memberId).orElseThrow();
+        DependentEntity member = dependentRepository.findById(memberId).orElseThrow();
         if (user.getFamilyMembers().contains(member)) {
-            member.setTransactionLimit(limit);
-            member = personalRepository.save(member);
+            member.setWalletBalance(limit);
+            member = dependentRepository.save(member);
             return member;
         }
         else {

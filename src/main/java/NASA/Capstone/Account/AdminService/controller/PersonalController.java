@@ -21,6 +21,7 @@ public class PersonalController {
     private final PersonalService personalService;
 
     private final PersonalRepository personalRepository;
+
     private final DependentRepository dependentRepository;
 
     public PersonalController(PersonalService personalService, PersonalRepository personalRepository, DependentRepository dependentRepository) {
@@ -78,7 +79,7 @@ public class PersonalController {
         FamilyMemberResponse response = new FamilyMemberResponse();
         try{
             personalRepository.findById(userId).orElseThrow();
-            personalRepository.findById(familyMemberId).orElseThrow();
+            dependentRepository.findById(familyMemberId).orElseThrow();
         } catch (Exception e) {
             response.setMessage("User or family member does not exist");
             return ResponseEntity.badRequest().body(response);
@@ -93,7 +94,7 @@ public class PersonalController {
         SetLimitResponse response = new SetLimitResponse();
         try{
             personalRepository.findById(userId).orElseThrow();
-            personalRepository.findById(memberId).orElseThrow();
+            dependentRepository.findById(memberId).orElseThrow();
         } catch (Exception e) {
             response.setMessage("User or family member does not exist");
             return ResponseEntity.badRequest().body(response);

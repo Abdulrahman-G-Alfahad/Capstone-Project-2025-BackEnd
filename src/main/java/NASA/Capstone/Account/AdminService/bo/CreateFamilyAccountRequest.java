@@ -10,8 +10,6 @@ public class CreateFamilyAccountRequest {
     private String fullName;
     private double walletBalance;
     private String faceId;
-    private PersonalEntity user;
-    private List<TransactionEntity> transactions;
 
     public String getFullName() {
         return fullName;
@@ -37,19 +35,4 @@ public class CreateFamilyAccountRequest {
         this.faceId = faceId;
     }
 
-    public PersonalEntity getUser() {
-        return user;
-    }
-
-    public void setUser(PersonalEntity user) {
-        this.user = user;
-    }
-
-    public List<TransactionEntity> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<TransactionEntity> transactions) {
-        this.transactions = transactions;
-    }
 }
