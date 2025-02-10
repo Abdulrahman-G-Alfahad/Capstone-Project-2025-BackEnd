@@ -1,10 +1,7 @@
 package NASA.Capstone.Account.AdminService.controller;
 
-import NASA.Capstone.Account.AdminService.bo.BusinessAssociateListResponse;
-import NASA.Capstone.Account.AdminService.bo.BusinessProfileResponse;
-import NASA.Capstone.Account.AdminService.bo.BusinessTransactionListResponse;
+import NASA.Capstone.Account.AdminService.bo.*;
 import NASA.Capstone.Account.AdminService.bo.Register.Request.RegisterAssociateRequest;
-import NASA.Capstone.Account.AdminService.bo.TransactionDTO;
 import NASA.Capstone.Account.AdminService.entity.TransactionEntity;
 import NASA.Capstone.Account.AdminService.repository.BusinessRepository;
 import NASA.Capstone.Account.AdminService.service.BusinessService;
@@ -26,6 +23,18 @@ public class BusinessController {
         this.businessService = businessService;
         this.businessRepository = businessRepository;
         this.transactionService = transactionService;
+    }
+
+    @GetMapping("/associate/{associateId}/business")
+    public ResponseEntity<GetBusinessByAssociateIdResponse> getBusinesses(@PathVariable("associateId") Long associateId) {
+        GetBusinessByAssociateIdResponse response = new GetBusinessByAssociateIdResponse();
+        try {
+            response.setBusiness(businessService.getBusiness(associateId));
+        } catch (Exception e) {
+            response.setMessage("Business not found");
+            return ResponseEntity.status(404).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/profile/{businessId}")
@@ -85,5 +94,17 @@ public class BusinessController {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(400).body(response);
         }
+    }
+
+    @GetMapping("/associate/{associateId}")
+    public ResponseEntity<GetAssociateResponse> getAssociate(@PathVariable("associateId") Long associateId) {
+        GetAssociateResponse response = new GetAssociateResponse();
+        try {
+            response.setAssociate(businessService.getAssociate(associateId));
+        } catch (Exception e) {
+            response.setMessage("Associate not found");
+            return ResponseEntity.status(404).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
 }
