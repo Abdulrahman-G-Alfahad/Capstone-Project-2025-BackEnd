@@ -34,7 +34,7 @@ public class PersonalController {
     public ResponseEntity<GetProfileResponse> getProfile(@PathVariable("userId") Long userId) {
         GetProfileResponse response = new GetProfileResponse();
         try{
-            System.out.println(personalRepository.findById(userId));
+//            System.out.println(personalRepository.findById(userId));
             personalRepository.findById(userId);
         } catch (Exception e) {
             response.setMessage("User does not exist");

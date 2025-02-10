@@ -1,5 +1,6 @@
 package NASA.Capstone.Account.AdminService.controller;
 
+import NASA.Capstone.Account.AdminService.Enums.Methods;
 import NASA.Capstone.Account.AdminService.Enums.Status;
 import NASA.Capstone.Account.AdminService.bo.GetTransactionsByReceiverResponse;
 import NASA.Capstone.Account.AdminService.bo.*;
@@ -46,6 +47,21 @@ public class TransactionController {
                 transactions.add(transactionService.fillTransactionDto(transaction));
             }
             response.setTransactions(transactions);
+        } catch (Exception e) {
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(404).body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/business/faceId")
+    public ResponseEntity<MakeBusinessTransactionResponse> makeBusinessTransactionWithFaceId(@RequestBody MakeFaceIdTransactionRequest request){
+        MakeBusinessTransactionResponse response = new MakeBusinessTransactionResponse();
+        try{
+            TransactionEntity transaction = transactionService.makeBusinessTransactionWithFaceId(request);
+            TransactionDTO dto = transactionService.fillTransactionDto(transaction);
+            response.setTransaction(dto);
+            response.setMessage("Transaction successful");
         } catch (Exception e) {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(404).body(response);
