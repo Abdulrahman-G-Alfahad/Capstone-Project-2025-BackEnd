@@ -3,10 +3,11 @@ package NASA.Capstone.Account.AdminService.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class DependentEntity {
+public class DependentEntity extends Accounts{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +23,7 @@ public class DependentEntity {
 
     @OneToMany
     @JoinColumn(name = "dependant_id")
-    private List<TransactionEntity> transactions;
+    private List<TransactionEntity> transactions = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -70,5 +71,9 @@ public class DependentEntity {
 
     public void setTransactions(List<TransactionEntity> transactions) {
         this.transactions = transactions;
+    }
+
+    public void addTransaction(TransactionEntity transaction) {
+        transactions.add(transaction);
     }
 }

@@ -28,7 +28,7 @@ public class TransactionEntity {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     @JsonIgnoreProperties(value = {"transactionHistory", "transactions", "familyMembers"})
-    private UserEntity sender;
+    private Accounts sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id")
@@ -36,7 +36,7 @@ public class TransactionEntity {
     private UserEntity receiver;
 
     @Column(nullable = false)
-    @JsonIgnore
+//    @JsonIgnore
     private Methods method;
 
     @ManyToOne
@@ -72,11 +72,11 @@ public class TransactionEntity {
         this.status = status;
     }
 
-    public UserEntity getSender() {
+    public Accounts getSender() {
         return sender;
     }
 
-    public void setSender(UserEntity sender) {
+    public void setSender(Accounts sender) {
         this.sender = sender;
     }
 

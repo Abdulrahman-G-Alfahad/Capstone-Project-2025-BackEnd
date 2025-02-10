@@ -10,7 +10,7 @@ import java.util.List;
 @Table(name = "users")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class UserEntity implements UserDetails {
+public class UserEntity extends Accounts implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
