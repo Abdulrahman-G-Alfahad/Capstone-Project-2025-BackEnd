@@ -28,7 +28,7 @@ public class BusinessEntity extends UserEntity{
     @JoinColumn(name = "business_id")
     private List<AssociateEntity> associates = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "business_id")
     private List<TransactionEntity> transactions = new ArrayList<>();
 

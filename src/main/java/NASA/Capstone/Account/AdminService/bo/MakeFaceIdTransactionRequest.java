@@ -9,7 +9,7 @@ public class MakeFaceIdTransactionRequest {
     private Double amount;
     private Methods method;
     private String associateId;
-    private String pin;
+//    private String pin;
 
     public String getFaceId() {
         return faceId;
@@ -51,11 +51,11 @@ public class MakeFaceIdTransactionRequest {
         this.associateId = associateId;
     }
 
-    public String getPin() {
-        return pin;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
+//    public String getPin() {
+//        return pin;
+//    }
+//
+//    public void setPin(String pin) {
+//        this.pin = pin;
+//    }
 }

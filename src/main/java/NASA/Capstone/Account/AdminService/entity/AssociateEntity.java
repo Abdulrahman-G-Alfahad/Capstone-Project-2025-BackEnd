@@ -1,5 +1,6 @@
 package NASA.Capstone.Account.AdminService.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,9 @@ public class AssociateEntity extends BusinessEntity{
 
     @Column(nullable = false)
     private String phoneNumber;
+
+    @JsonIgnoreProperties(value = {"transactions", "associates", "bankAccountNumber", "businessLicenseId", "address"})
+    private BusinessEntity business;
 
     @Override
     public Long getId() {
@@ -39,5 +43,18 @@ public class AssociateEntity extends BusinessEntity{
     @Override
     public String getRole() {
         return "Associate";
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BusinessEntity getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(BusinessEntity business) {
+        this.business = business;
     }
 }

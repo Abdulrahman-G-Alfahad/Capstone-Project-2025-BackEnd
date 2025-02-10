@@ -105,16 +105,16 @@ public class TransactionService {
             transaction.setSender(personalEntity.get());
             transaction.setReceiver(business);
             personal = personalEntity.get();
-            if (personal.getPin() == null || !passwordEncoder.matches(request.getPin(), personal.getPin())) {
-                throw new Exception("Incorrect pin");
-            }
+//            if (personal.getPin() == null || !passwordEncoder.matches(request.getPin(), personal.getPin())) {
+//                throw new Exception("Incorrect pin");
+//            }
         } else {
             transaction.setSender(dependentEntity.get());
             transaction.setReceiver(business);
             personal = dependentEntity.get().getGuardian();
-            if (personal.getPin() == null || !passwordEncoder.matches(request.getPin(), personal.getPin())) {
-                throw new Exception("Incorrect pin");
-            }
+//            if (personal.getPin() == null || !passwordEncoder.matches(request.getPin(), personal.getPin())) {
+//                throw new Exception("Incorrect pin");
+//            }
         }
 
         transaction.setMethod(Methods.FACEID);
