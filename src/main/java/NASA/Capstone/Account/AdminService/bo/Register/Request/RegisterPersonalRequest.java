@@ -15,11 +15,11 @@ public class RegisterPersonalRequest extends RegisterRequest{
     private String address;
     private String faceId;
     private String username;
-    private Roles type;
+//    private Roles type;
 
 //    @Size(min = 4, max = 4, message = "PIN must be exactly 4 digits.")
 //    @Pattern(regexp = "\\d{4}", message = "PIN must be numeric")
-    private String pin;
+//    private String pin;
 
     public String getCivilId() {
         return civilId;
@@ -93,19 +93,19 @@ public class RegisterPersonalRequest extends RegisterRequest{
         this.faceId = faceId;
     }
 
-    public Roles getType() {
-        return type;
-    }
+//    public Roles getType() {
+//        return type;
+//    }
+//
+//    public void setType(Roles type) {
+//        this.type = type;
+//    }
 
-    public void setType(Roles type) {
-        this.type = type;
-    }
-
-    public String getPin() {
-        return pin;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
+//    public String getPin() {
+//        return pin;
+//    }
+//
+//    public void setPin(String pin) {
+//        this.pin = pin;
+//    }
 }

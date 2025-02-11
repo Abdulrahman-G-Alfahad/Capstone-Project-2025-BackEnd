@@ -102,16 +102,22 @@ public class TransactionService {
         transaction.setAssociateId(associate);
 
         if (personalEntity.isPresent()) {
-            transaction.setSender(personalEntity.get());
-            transaction.setReceiver(business);
             personal = personalEntity.get();
+            Double newBalance = personal.getWalletBalance() - request.getAmount();
+            personal.setWalletBalance(newBalance);
+            personal = personalRepository.save(personal);
+            transaction.setSender(personal);
+            transaction.setReceiver(business);
 //            if (personal.getPin() == null || !passwordEncoder.matches(request.getPin(), personal.getPin())) {
 //                throw new Exception("Incorrect pin");
 //            }
         } else {
-            transaction.setSender(dependentEntity.get());
-            transaction.setReceiver(business);
             personal = dependentEntity.get().getGuardian();
+            Double newBalance = personal.getWalletBalance() - request.getAmount();
+            personal.setWalletBalance(newBalance);
+            personal = personalRepository.save(personal);
+            transaction.setSender(personal);
+            transaction.setReceiver(business);
 //            if (personal.getPin() == null || !passwordEncoder.matches(request.getPin(), personal.getPin())) {
 //                throw new Exception("Incorrect pin");
 //            }
