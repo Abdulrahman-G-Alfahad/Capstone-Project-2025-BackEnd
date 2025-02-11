@@ -55,7 +55,7 @@ public class PersonalEntity extends UserEntity{
     @Column(nullable = true)
     private Double transactionLimit;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String pin;
 
     @Override
