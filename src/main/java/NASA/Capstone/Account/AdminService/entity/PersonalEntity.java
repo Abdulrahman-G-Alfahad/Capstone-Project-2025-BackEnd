@@ -1,6 +1,7 @@
 package NASA.Capstone.Account.AdminService.entity;
 
 import NASA.Capstone.Account.AdminService.Enums.Roles;
+import NASA.Capstone.Account.AdminService.bo.TransactionDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -44,6 +45,10 @@ public class PersonalEntity extends UserEntity{
     @JoinColumn(name = "personal_id")
     //@JsonIgnoreProperties("dateTime")
     private List<TransactionEntity> transactionHistory = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "temp_id")
+    private List<TransactionEntity> tempTransactions = new ArrayList<>();
 
     @Column(nullable = true)
     private String bankAccountNumber;
@@ -167,6 +172,22 @@ public class PersonalEntity extends UserEntity{
 
     public void setPin(String pin) {
         this.pin = pin;
+    }
+
+    public List<TransactionEntity> getTempTransactions() {
+        return tempTransactions;
+    }
+
+    public void setTempTransactions(List<TransactionEntity> tempTransactions) {
+        this.tempTransactions = tempTransactions;
+    }
+
+    public void addTempTransaction(TransactionEntity transaction) {
+        tempTransactions.add(transaction);
+    }
+
+    public void removeTempTransaction(TransactionEntity transaction) {
+        this.tempTransactions.remove(transaction);
     }
 
     @Override

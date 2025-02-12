@@ -69,6 +69,36 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/personal/qrcode")
+    public ResponseEntity<MakeBusinessTransactionResponse> makePersonalTransactionWithQRCode(@RequestBody StartQrCodeTransactionRequest request){
+        MakeBusinessTransactionResponse response = new MakeBusinessTransactionResponse();
+        try{
+            TransactionEntity transaction = transactionService.makePersonalTransactionWithQRCode(request);
+            TransactionDTO dto = transactionService.fillTransactionDto(transaction);
+            response.setTransaction(dto);
+            response.setMessage("Transaction started successfully");
+        } catch (Exception e) {
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(404).body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/business/qrcode")
+    public ResponseEntity<MakeBusinessTransactionResponse> makeBusinessTransactionWithQRCode(@RequestBody MakeQRCodeTransactionRequest request){
+        MakeBusinessTransactionResponse response = new MakeBusinessTransactionResponse();
+        try{
+            TransactionEntity transaction = transactionService.makeBusinessTransactionWithQRCode(request);
+            TransactionDTO dto = transactionService.fillTransactionDto(transaction);
+            response.setTransaction(dto);
+            response.setMessage("Transaction successful");
+        } catch (Exception e) {
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(404).body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/business")
     public ResponseEntity<MakeBusinessTransactionResponse> makeBusinessTransaction(@RequestBody MakeBusinessTransactionRequest request){
         MakeBusinessTransactionResponse response = new MakeBusinessTransactionResponse();

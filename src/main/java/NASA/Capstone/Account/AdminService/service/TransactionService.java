@@ -8,10 +8,12 @@ import NASA.Capstone.Account.AdminService.repository.DependentRepository;
 import NASA.Capstone.Account.AdminService.repository.PersonalRepository;
 import NASA.Capstone.Account.AdminService.repository.TransactionRepository;
 import NASA.Capstone.Account.AdminService.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +43,13 @@ public class TransactionService {
         transactionDTO.setAmount(transaction.getAmount());
         transactionDTO.setTransactionDate(transaction.getDateTime().toString());
         transactionDTO.setMethod(transaction.getMethod());
-        transactionDTO.setReceiverId(transaction.getReceiver().getId());
+
+        if (transaction.getReceiver() instanceof BusinessEntity) {
+            transactionDTO.setReceiverId(transaction.getReceiver().getId());
+        } else {
+            transactionDTO.setReceiverId(0L);
+        }
+
         transactionDTO.setSenderId(sender.getId());
         transactionDTO.setStatus(transaction.getStatus());
         transactionDTO.setTransactionId(transaction.getId());
@@ -216,4 +224,106 @@ public class TransactionService {
         userRepository.save(personalEntity);
         return deposit;
     }
+
+    public TransactionEntity makePersonalTransactionWithQRCode(StartQrCodeTransactionRequest request){
+        LocalDateTime datetime = LocalDateTime.now();
+        TransactionEntity transaction = new TransactionEntity();
+        UserEntity sender = userRepository.findById(Long.valueOf(request.getSenderId())).orElseThrow();
+        transaction.setAmount(request.getAmount());
+        transaction.setSender(sender);
+        transaction.setMethod(Methods.BARCODE);
+        transaction.setStatus(Status.PENDING);
+        transaction.setDateTime(datetime.toString());
+        transactionRepository.save(transaction);
+        PersonalEntity senderEntity = (PersonalEntity) sender;
+        senderEntity.addTempTransaction(transaction);
+        userRepository.save(senderEntity);
+        return transaction;
+    }
+
+    @Transactional
+    public TransactionEntity makeBusinessTransactionWithQRCode(MakeQRCodeTransactionRequest request) throws Exception {
+        UserEntity associate = userRepository.findById(Long.valueOf(request.getAssociateId())).orElseThrow();
+        UserEntity receiver = userRepository.findById(Long.valueOf(request.getReceiverId())).orElseThrow();
+
+        Optional<PersonalEntity> personalEntity = personalRepository.findById(Long.valueOf(request.getSenderId()));
+        Optional<DependentEntity> dependentEntity = dependentRepository.findById(Long.valueOf(request.getSenderId()));
+
+        if (personalEntity.isEmpty() && dependentEntity.isEmpty()) {
+            throw new Exception("User not found in either repository");
+        }
+
+        List<TransactionEntity> tempTransactions;
+        PersonalEntity sender;
+
+        if (personalEntity.isPresent()) {
+            sender = personalEntity.get();
+            tempTransactions = sender.getTempTransactions();
+        } else {
+            sender = dependentEntity.get().getGuardian();
+            tempTransactions = sender.getTempTransactions();
+        }
+
+        // Check if tempTransactions is empty
+        if (tempTransactions.isEmpty()) {
+            throw new Exception("No temporary transactions found");
+        }
+
+        LocalDateTime datetime = LocalDateTime.now();
+        TransactionEntity transaction = new TransactionEntity();
+
+        TransactionEntity matchedTransaction = null;
+
+        for (TransactionEntity tempTransaction : tempTransactions) {
+            if (tempTransaction.getAmount().equals(request.getAmount())) {
+                matchedTransaction = tempTransaction;
+                break;
+            }
+        }
+
+        if (matchedTransaction == null) {
+            throw new Exception("Transaction not found in tempTransactions");
+        }
+
+        // Set transaction details
+        transaction.setAmount(request.getAmount());
+        transaction.setAssociateId((AssociateEntity) associate);
+        transaction.setSender(sender);
+        transaction.setReceiver(receiver);
+        transaction.setMethod(Methods.BARCODE);
+        transaction.setStatus(Status.APPROVED);
+        transaction.setDateTime(datetime.toString());
+
+        // Save transaction first
+        transaction = transactionRepository.save(transaction);
+
+        // Remove tempTransaction from sender
+        sender.removeTempTransaction(matchedTransaction);
+
+        // Persist sender changes before deleting temp transaction
+        userRepository.save(sender);
+
+        // Ensure tempTransaction is managed before deleting
+        matchedTransaction = transactionRepository.findById(matchedTransaction.getId()).orElse(null);
+        if (matchedTransaction != null) {
+            transactionRepository.delete(matchedTransaction);
+        }
+
+        // Update wallet balance
+        if (personalEntity.isPresent()) {
+            sender.setWalletBalance(sender.getWalletBalance() - request.getAmount());
+        }
+
+        // Add the transaction to sender and receiver
+        sender.addTransaction(transaction);
+        ((BusinessEntity) receiver).addTransaction(transaction);
+
+        // Save all changes in one transaction
+        userRepository.save(associate);
+        userRepository.save(sender);
+        userRepository.save(receiver);
+
+        return transaction;
+    }
+
 }
